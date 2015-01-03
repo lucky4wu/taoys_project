@@ -8,6 +8,7 @@ import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
 
+import cn.taoys.dao.PingDao;
 import cn.taoys.ui.NetworkFrame;
 
 public class Pinger { 
@@ -43,10 +44,10 @@ public class Pinger {
 	 *  @param timeout  
 	 *  @return  
 	 */
-	public boolean isReachable(NetworkFrame networkFrame) {
+	public boolean isReachable(NetworkFrame networkFrame, PingDao pingDao, String uname) {
 	    BufferedReader in = null;  
 	    Runtime r = Runtime.getRuntime();  // 将要执行的ping命令,此命令是windows格式的命令 
-	    String pingCommand = "cmd /c ping " + remoteIpAddress + " -n " + pingTimes    + " -w " + timeOut;  try {   // 执行命令并获取输出   
+	    String pingCommand = "ping " + remoteIpAddress + " -n " + pingTimes    + " -w " + timeOut;  try {   // 执行命令并获取输出   
 	    logger.debug(pingCommand);
 	    Process p = r.exec(pingCommand);   
 	    if (p == null) {    
@@ -56,16 +57,22 @@ public class Pinger {
 	    int connectedCount = 0;   
 	    String line = null;   
 	    StringBuffer sb = new StringBuffer();
-	    
-	    Integer exitCode = p.waitFor();
-	    logger.debug("exit code ="+exitCode);
-	    
-	    /*while ((line = in.readLine()) != null) {  
+	    boolean flag = false;
+	    while ((line = in.readLine()) != null) {  
 	    	logger.debug("line="+line);
 	    	sb.append(line).append("\n");
-	    	connectedCount += getCheckResult(line);   
-	    }*/   // 如果出现类似=23ms TTL=62这样的字样,出现的次数=测试次数则返回真   
-	    networkFrame.updateConsole(sb.toString());
+	    	Integer tmpCount = getCheckResult(line);
+	    	if(tmpCount==0 && !flag ){
+	    		pingDao.save(remoteIpAddress, pingTimes, timeOut, uname);
+	    		flag = true;
+	    	}
+	    	if(tmpCount==1 && flag){
+	    		pingDao.save(remoteIpAddress, pingTimes, timeOut, uname);
+	    		flag = false;
+	    	}
+	    	connectedCount += tmpCount;   
+	    }   // 如果出现类似=23ms TTL=62这样的字样,出现的次数=测试次数则返回真   
+	    	networkFrame.updateConsole(sb.toString());
 	    	return connectedCount == pingTimes;  
 	    } catch (Exception ex) {   
 	    	logger.error(ex.getMessage());

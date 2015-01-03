@@ -29,6 +29,10 @@ public class Main {
 		UserService userService = new UserService();
 		NetworkService networkService= new NetworkService();
 		
+		clientContext.setLoginFrame(loginFrame);
+		clientContext.setMenuFrame(menuFrame);
+		clientContext.setNetworkFrame(networkFrame);
+		clientContext.setTableFrame(tableFrame);
 		
 		networkService.setNetworkFrame(networkFrame);
 		networkService.setPingDao(pingDao);

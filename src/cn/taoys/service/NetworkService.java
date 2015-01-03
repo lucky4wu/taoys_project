@@ -22,8 +22,9 @@ public class NetworkService {
 	
 	public void ping(String remoteIpAddress, Integer pingTimes, Integer timeOut, String uname) {
 		Pinger p = new Pinger(remoteIpAddress, pingTimes, timeOut);
-		boolean isReachable = p.isReachable(networkFrame);
+		boolean isReachable = p.isReachable(networkFrame, pingDao, uname);
 		logger.info("isReachable="+isReachable);
+		/*
 		if(!isReachable){
 			try {
 				pingDao.save(remoteIpAddress, pingTimes, timeOut, uname);
@@ -31,6 +32,7 @@ public class NetworkService {
 				logger.error(e.getMessage());
 			}
 		}
+		*/
 	}
 	
 	public void stopPing() {
