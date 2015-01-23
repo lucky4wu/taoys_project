@@ -29,4 +29,10 @@ public class Config {
 	public double getDouble(String key){
 		return Double.parseDouble(table.getProperty(key));
 	}
+	
+	public static void main(String[] args) {
+		Config config = new Config("client.properties");
+		String DEFAULT_REMOTE_NET_ADDRESS = config.getString("DEFAULT_REMOTE_NET_ADDRESS");
+		System.out.println(DEFAULT_REMOTE_NET_ADDRESS);
+	}
 }

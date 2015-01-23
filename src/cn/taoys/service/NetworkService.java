@@ -1,29 +1,55 @@
 package cn.taoys.service;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+
+import javax.swing.JTextArea;
 
 import org.apache.log4j.Logger;
 
 import cn.taoys.dao.PingDao;
+import cn.taoys.entity.EntityContext;
 import cn.taoys.entity.PingRecord;
 import cn.taoys.ui.NetworkFrame;
+import cn.taoys.utils.PingTask;
 import cn.taoys.utils.Pinger;
 
 public class NetworkService {
 
 	private static Logger logger = Logger.getLogger(NetworkService.class);
 	
-	private NetworkFrame networkFrame;
 	private PingDao pingDao;
+	private EntityContext context;
+	
+	public NetworkService(EntityContext context){
+		this.context = context;
+	}
+	
+	public PingTask pingTask(PingTask task, JTextArea console, String netAddress,
+			Integer pingTimes, Integer timeOut, String uname) {
+		String toMail = context.getToMail();
+		String fromMail = context.getFromMail();
+		String smtpHost = context.getSmtpHost();
+		boolean isDebug = context.getIsDebug();
+		String fromMailPwd = context.getFromMailPwd();
+		String subject = context.getMailSubject();
+		task = new PingTask(console, netAddress, pingTimes, timeOut, uname, pingDao, 
+				toMail, fromMail, smtpHost, isDebug, fromMailPwd, subject);
+		return task;
+	}
 	
 	public void ping(String remoteIpAddress, Integer pingTimes, Integer timeOut, String uname) {
-		Pinger p = new Pinger(remoteIpAddress, pingTimes, timeOut);
-		boolean isReachable = p.isReachable(networkFrame, pingDao, uname);
-		logger.info("isReachable="+isReachable);
+		
+//		Pinger p = new Pinger(remoteIpAddress, pingTimes, timeOut);
+//		p.isSendEmail();
+//		boolean isReachable = p.isReachable(networkFrame, pingDao, uname);
+//		logger.info("isReachable="+isReachable);
 		/*
 		if(!isReachable){
 			try {
@@ -34,6 +60,7 @@ public class NetworkService {
 		}
 		*/
 	}
+	
 	
 	public void stopPing() {
 		Runtime runtime = Runtime.getRuntime(); 
@@ -46,7 +73,7 @@ public class NetworkService {
 	}
 	
 	public void ping(String netAddress) {
-		Runtime runtime = Runtime.getRuntime(); // 获取当前程序的运行进对象
+		/*Runtime runtime = Runtime.getRuntime(); // 获取当前程序的运行进对象
 		Process process = null; // 声明处理类对象
 		String line = null; // 返回行信息
 		InputStream is = null; // 输入流
@@ -80,24 +107,23 @@ public class NetworkService {
 		} catch (IOException e) {
 		    System.out.println(e);
 		    runtime.exit(1);
-	    }
+	    }*/
 		
 	}
 
 
-	public void setNetworkFrame(NetworkFrame networkFrame) {
-		this.networkFrame = networkFrame;
-	}
 	
 	public void setPingDao(PingDao pingDao){
 		this.pingDao = pingDao;
 	}
 	
 	public static void main(String[] args) {
-		NetworkService networkService = new NetworkService();
+//		NetworkService networkService = new NetworkService();
 		String netAddress = "www.baidu.com";
-		networkService.ping(netAddress);
+//		networkService.ping(netAddress);
 	}
+
+	
 
 	
 

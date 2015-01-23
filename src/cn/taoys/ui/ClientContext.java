@@ -1,9 +1,13 @@
 package cn.taoys.ui;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.List;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.JTextArea;
+import javax.swing.SwingWorker;
 
 import org.apache.log4j.Logger;
 
@@ -13,6 +17,7 @@ import cn.taoys.entity.User;
 import cn.taoys.service.NameOrPwdException;
 import cn.taoys.service.NetworkService;
 import cn.taoys.service.UserService;
+import cn.taoys.utils.PingTask;
 
 public class ClientContext {
 	
@@ -75,6 +80,36 @@ public class ClientContext {
 		menuFrame.setVisible(false);
 		networkFrame.setVisible(true);
 	}
+	
+	public PingTask pingTask(PingTask task, JTextArea console){
+		String netAddress = networkFrame.getNetAddress();
+		String pingTimesField = networkFrame.getPingTimes();
+		String timeOutField = networkFrame.getTimeOut();
+		if(netAddress == null || "".equals(netAddress)){
+			networkFrame.showMessage("IP地址/域名不能为空");
+		}else{
+			networkFrame.showMessage("");
+		}
+		if(pingTimesField == null || "".equals(pingTimesField)){
+			pingTimesField = "1";
+		}
+		if(timeOutField == null || "".equals(timeOutField)){
+			timeOutField = "1000";
+		}
+		Integer pingTimes = Integer.parseInt(pingTimesField);
+		Integer timeOut = Integer.parseInt(timeOutField);
+		String uname = loginFrame.getUname();
+		
+//		String pingCommand = "ping " + netAddress + " -n " + pingTimes    + " -w " + timeOut;
+		
+		task = networkService.pingTask(task, console, netAddress, pingTimes, timeOut, uname);
+		
+		return task;
+	}
+	
+	/**
+	 * 
+	 */
 	public void ping() {
 		try{
 			String netAddress = networkFrame.getNetAddress();
@@ -106,7 +141,7 @@ public class ClientContext {
 		
 	}
 	
-	public void details() {
+	/*public void details() {
 		this.findPingListByUname();
 		tableFrame.setVisible(true);
 	}
@@ -116,7 +151,7 @@ public class ClientContext {
 		List<PingRecord> prList = networkService.findDetailsByUname(uname);
 		tableFrame.setPingList(prList);
 	}
-
+*/
 	
 	public void backMenu(JFrame source) {
 		source.setVisible(false);

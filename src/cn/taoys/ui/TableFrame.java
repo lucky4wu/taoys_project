@@ -90,13 +90,13 @@ public class TableFrame extends JFrame{
 	public static void main(String[] args) {
 		TableFrame tableFrame = new TableFrame();
 		ClientContext clientContext = new ClientContext();
-		NetworkService networkService = new NetworkService();
+//		NetworkService networkService = new NetworkService();
 		NetworkFrame networkFrame = new NetworkFrame();
 		LoginFrame loginFrame = new LoginFrame();
 		
 		tableFrame.setClientContext(clientContext);
-		networkService.setNetworkFrame(networkFrame);
-		clientContext.setNetworkService(networkService);
+//		networkService.setNetworkFrame(networkFrame);
+//		clientContext.setNetworkService(networkService);
 		clientContext.setLoginFrame(loginFrame);
 		clientContext.setTableFrame(tableFrame);
 		
