@@ -59,25 +59,30 @@ public class PingTask extends SwingWorker<List<String>, String>{
 			logger.debug("ping task exitVal:"+exitVal);
 			stdoutList = cmdUtil.getStdoutList();
 			logger.debug("stdoutList.size()="+stdoutList.size());
+			int index = 0;
 			for(String outPub : stdoutList){
 				logger.debug("publish string="+outPub);
 				publish(outPub);
-				
-				Integer tmpCount = getRequestdTimeOut(outPub);
-		    	if(tmpCount==0 && !flag ){
-		    		//发送一封邮件提示
-//		    		MailMsgSend mms = new MailMsgSend("wu_qingjian@126.com", "crazywu@126.com", "smtp.126.com", false, "iwnet0214");
-		    		MailMsgSend mms = new MailMsgSend(toMail, fromMail, smtpHost, isDebug, fromMailPwd);
-		    		String msgText = "远程网络地址为"+remoteNetAddress+"侦测到连接中断，请及时查看。本邮件由系统自动发出，请勿直接回复。谢谢！";
-		    		mms.msgSend(subject, msgText);
-		    		pingDao.save(remoteNetAddress, pingTimes, timeOut, uname);
-		    		flag = true;
-		    	}
-		    	if(tmpCount==1 && flag){
-		    		pingDao.save(remoteNetAddress, pingTimes, timeOut, uname);
-		    		flag = false;
-		    	}
-		    	
+				if(outPub.startsWith("正在 Ping ")){
+					Integer tmpCount = getRequestdTimeOut(stdoutList.get(index+1));
+			    	if(tmpCount==1 && !flag ){
+			    		publish(stdoutList.get(index+1));
+			    		//发送一封邮件提示
+//			    		MailMsgSend mms = new MailMsgSend("wu_qingjian@126.com", "crazywu@126.com", "smtp.126.com", false, "iwnet0214");
+			    		MailMsgSend mms = new MailMsgSend(toMail, fromMail, smtpHost, isDebug, fromMailPwd);
+			    		String msgText = "远程网络地址为"+remoteNetAddress+"侦测到连接中断，请及时查看。本邮件由系统自动发出，请勿直接回复。谢谢！";
+			    		mms.msgSend(subject, msgText);
+			    		pingDao.save(remoteNetAddress, pingTimes, timeOut, uname, "1");
+			    		flag = true;
+			    		break;
+			    	}
+			    	if(tmpCount==0 && flag){
+			    		pingDao.save(remoteNetAddress, pingTimes, timeOut, uname, "2");
+			    		flag = false;
+			    		break;
+			    	}
+				}
+		    	index++;
 			}
 			count++;
 			String minute = (pingTimes-count)*timeOut/1000/60+"";
@@ -113,7 +118,7 @@ public class PingTask extends SwingWorker<List<String>, String>{
 	}
 	
 	private static int getRequestdTimeOut(String line) {  
-		Pattern pattern = Pattern.compile("无法访问目标主机",
+		Pattern pattern = Pattern.compile("无法访问目标主机|请求超时",
 				Pattern.CASE_INSENSITIVE);  
 		Matcher matcher = pattern.matcher(line); 
 		while (matcher.find()) {  
@@ -124,6 +129,14 @@ public class PingTask extends SwingWorker<List<String>, String>{
 	
 	
 	public static void main(String[] args) {
+		String str = "正在 Ping 192.168.1.110 具有 32 字节的数据";
+		String str2 = "正在 Ping www.a.shifen.com [115.239.211.112] 具有 32 字节的数据";
+				
+		System.out.println(str2.startsWith("正在 Ping "));
+		
+		
+		int re = PingTask.getRequestdTimeOut("请求超时。");
+		System.out.println(re);
 		final JProgressBar progressBar = new JProgressBar(0,100);
 		JTextArea textArea = new JTextArea();
 		String pingCommand = "ping -n 10 www.baidu.com";

@@ -13,7 +13,7 @@ public class PingRecord implements Serializable{
 	private String timeOut;
 	private String pingTimes;
 	private String createTime;
-	
+	private String status;//1、开始，2、结束
 	
 	public Integer getId() {
 		return id;
@@ -56,6 +56,12 @@ public class PingRecord implements Serializable{
 	}
 	public void setCreateTime(String createTime) {
 		this.createTime = createTime;
+	}
+	public String getStatus() {
+		return status;
+	}
+	public void setStatus(String status) {
+		this.status = status;
 	}
 	
 	@Override

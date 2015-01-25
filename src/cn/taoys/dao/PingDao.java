@@ -17,12 +17,12 @@ public class PingDao {
 	private Logger logger = Logger.getLogger(PingDao.class);
 	
 	private static final String sql_addPing = 
-			"insert into taoys_ping value(id,uname,email,ipAddress,timeOut,pingTimes,createTime) "
-			+ "values(taoys_seq_ping.nextval, ?, ?, ?, ?, ?, to_char(sysdate, 'YYYY-MM-DD HH24:MI:SS'))";
+			"insert into taoys_ping value(id,uname,email,ipAddress,timeOut,pingTimes,createTime,status) "
+			+ "values(taoys_seq_ping.nextval, ?, ?, ?, ?, ?, to_char(sysdate, 'YYYY-MM-DD HH24:MI:SS'), ?)";
 	
 
 	public void save(String remoteIpAddress, Integer pingTimes,
-			Integer timeOut, String uname)  {
+			Integer timeOut, String uname, String status)  {
 		Connection conn = null;
 		PreparedStatement prep = null;
 		try {
@@ -31,8 +31,9 @@ public class PingDao {
 			prep.setString(1, uname);
 			prep.setString(2, "email");
 			prep.setString(3, remoteIpAddress);		
-			prep.setString(4, pingTimes.toString());
-			prep.setString(5, timeOut.toString());
+			prep.setString(4, timeOut.toString());
+			prep.setString(5, pingTimes.toString());
+			prep.setString(6, status);
 			prep.executeUpdate();
 		} catch (Exception e) {
 			logger.error(e);

@@ -75,14 +75,14 @@ public class Pinger {
 	    	logger.debug("line="+line);
 	    	sb.append(line).append("\n");
 	    	Integer tmpCount = getCheckResult(line);
-	    	if(tmpCount==0 && !flag ){
+	    	/*if(tmpCount==0 && !flag ){
 	    		pingDao.save(remoteIpAddress, pingTimes, timeOut, uname);
 	    		flag = true;
 	    	}
 	    	if(tmpCount==1 && flag){
 	    		pingDao.save(remoteIpAddress, pingTimes, timeOut, uname);
 	    		flag = false;
-	    	}
+	    	}*/
 	    	connectedCount += tmpCount;   
 	    }   // 如果出现类似=23ms TTL=62这样的字样,出现的次数=测试次数则返回真   
 	    	networkFrame.updateConsole(sb.toString());
