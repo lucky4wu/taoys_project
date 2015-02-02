@@ -63,7 +63,7 @@ public class PingTask extends SwingWorker<List<String>, String>{
 			for(String outPub : stdoutList){
 				logger.debug("publish string="+outPub);
 				publish(outPub);
-				if(outPub.startsWith("正在 Ping ")){
+				if(outPub.startsWith("正在 Ping ")){//找到标志行
 					Integer tmpCount = getRequestdTimeOut(stdoutList.get(index+1));
 			    	if(tmpCount==1 && !flag ){
 			    		publish(stdoutList.get(index+1));

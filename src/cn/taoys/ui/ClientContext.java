@@ -27,7 +27,7 @@ public class ClientContext {
 	private LoginFrame loginFrame;
 	private MenuFrame menuFrame;
 	private NetworkFrame networkFrame;
-	private TableFrame tableFrame;
+	private MultiPingFrame multiPingFrame;
 	private UserService userService;
 	private NetworkService networkService;
 	
@@ -170,9 +170,10 @@ public class ClientContext {
 	public void setNetworkFrame(NetworkFrame networkFrame){
 		this.networkFrame = networkFrame;
 	}
-	public void setTableFrame(TableFrame tableFrame){
-		this.tableFrame = tableFrame;
+	public void setMultiPingFrame(MultiPingFrame multiPingFrame) {
+		this.multiPingFrame = multiPingFrame;
 	}
+
 	public void setUserService(UserService userService){
 		this.userService = userService;
 	}

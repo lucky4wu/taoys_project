@@ -98,7 +98,7 @@ public class TableFrame extends JFrame{
 //		networkService.setNetworkFrame(networkFrame);
 //		clientContext.setNetworkService(networkService);
 		clientContext.setLoginFrame(loginFrame);
-		clientContext.setTableFrame(tableFrame);
+//		clientContext.setTableFrame(tableFrame);
 		
 		tableFrame.setVisible(true);
 	}
